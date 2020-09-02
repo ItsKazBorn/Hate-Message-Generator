@@ -10,69 +10,73 @@ import Foundation
 
 class HateGenerator {
     
-    let xingamentos = ["fracassado", "vagabundo", "escroto", "babaca"]
-    let adjetivos   = ["arrogante", "covarde", "falso", "fingido", "mentiroso", "narcisista"]
-    let verbos1     = ["se enxerga", "morre", "morra", "some", "desaparece"]
-    let verbos2     = ["se enxergar", "morrer", "sumir", "desaparecer"]
+    private let xingamentos = ["fracassado", "vagabundo", "escroto", "babaca"]
+    private let adjetivos   = ["arrogante", "covarde", "falso", "fingido", "mentiroso", "narcisista"]
+    private let verbos1     = ["se enxerga", "morre", "morra", "some", "desaparece"]
+    private let verbos2     = ["se enxergar", "morrer", "sumir", "desaparecer"]
+    private let ligamentos  = ["... ", "! ", " "]
     
-    func generateHate () {
+    /// This returns a string: "@\(random username): \(hate message)"
+    public func generateHate () -> String {
         
-        var message = generateMessageStructure()
-        message = randomStyle(input: message)
+        let message = generateHateMessage()
         
-        let name  = randomString(length: Int.random(in: 5 ... 10))
+        let name  = randomUsername(length: Int.random(in: 5 ... 10))
         
-        print("@" + name + ": " + message)
+        let hate = "@" + name + ": " + message
+        print(hate)
         
-        
+        return hate
     }
     
-    func randomString(length: Int) -> String {
+    /// This returns a string: "\(random username)"
+    public func randomUsername(length: Int) -> String {
         let letters = "abcdefghijklmnopqrstuvwxyz0123456789"
         return String((0..<length).map{ _ in letters.randomElement()! })
     }
     
-    private func generateMessageStructure () -> String {
+    /// This returns a string: "\(hate message)"
+    public func generateHateMessage () -> String {
         var output = ""
         
         let structure = Int.random(in: 1 ... 9)
         
         switch structure {
         case 1:
-            output += generateXingamento()
-            output += generateAdjetivo()
-            output += generateVerbo()
+            output += generateXingamento() // (voce é um ) + [xingamento] + [ligamento]
+            output += generateAdjetivo()   // (voce é (muito ) OR deixa de ser ) + [adjetivo] + [ligamento]
+            output += generateVerbo()      // [[verbos1] OR voce deveria [verbos2]] + [ligamento]
             
         case 2:
-            output += generateXingamento()
-            output += generateAdjetivo()
+            output += generateXingamento() // (voce é um ) + [xingamento] + [ligamento]
+            output += generateAdjetivo()   // (voce é (muito ) OR deixa de ser ) + [adjetivo] + [ligamento]
             
         case 3:
-            output += generateXingamento()
-            output += generateVerbo()
+            output += generateXingamento() // (voce é um ) + [xingamento] + [ligamento]
+            output += generateVerbo()      // [[verbos1] OR voce deveria [verbos2]] + [ligamento]
             
         case 4:
-            output += generateXingamento()
+            output += generateXingamento() // (voce é um ) + [xingamento] + [ligamento]
             
         case 5:
-            output += generateAdjetivo()
-            output += generateVerbo()
+            output += generateAdjetivo()   // (voce é (muito ) OR deixa de ser ) + [adjetivo] + [ligamento]
+            output += generateVerbo()      // [[verbos1] OR voce deveria [verbos2]] + [ligamento]
             
         case 6:
-            output += generateVerbo()
-            output += generateXingamento()
-            output += generateAdjetivo()
+            output += generateVerbo()      // [[verbos1] OR voce deveria [verbos2]] + [ligamento]
+            output += generateXingamento() // (voce é um ) + [xingamento] + [ligamento]
+            output += generateAdjetivo()   // (voce é (muito ) OR deixa de ser ) + [adjetivo] + [ligamento]
             
         case 7:
-            output += generateVerbo()
-            output += generateXingamento()
+            output += generateVerbo()      // [[verbos1] OR voce deveria [verbos2]] + [ligamento]
+            output += generateXingamento() // (voce é um ) + [xingamento] + [ligamento]
             
         case 8:
-            output += generateVerbo()
-            output += generateAdjetivo()
+            output += generateVerbo()      // [[verbos1] OR voce deveria [verbos2]] + [ligamento]
+            output += generateAdjetivo()   // (voce é (muito ) OR deixa de ser ) + [adjetivo] + [ligamento]
             
         case 9:
-            output += generateVerbo()
+            output += generateVerbo()      // [[verbos1] OR voce deveria [verbos2]] + [ligamento]
             
         default:
             output = "Error on Switch #5"
@@ -80,7 +84,9 @@ class HateGenerator {
         
         let trimmed = output.trimmingCharacters(in: .whitespaces)
         
-        return trimmed
+        let out = randomStyle(input: trimmed)
+        
+        return out
     }
     
     private func randomStyle (input: String) -> String {
@@ -152,7 +158,7 @@ class HateGenerator {
         return output
     }
     
-    func generateVerbo () -> String {
+    private func generateVerbo () -> String {
         var output = ""
         
         let i = Int.random(in: 0 ... 1)
@@ -176,16 +182,7 @@ class HateGenerator {
     }
     
     private func genLigamento () -> String {
-        var output  = ""
-        let n = Int.random(in: 0 ... 1)
-        switch n {
-        case 0:
-            output += "... "
-        case 1:
-            output += "! "
-        default:
-            print("Error in Switch #4")
-        }
-        return output
+        let n = Int.random(in: 0 ..< ligamentos.count)
+        return ligamentos[n]
     }
 }
